@@ -106,7 +106,7 @@ moon(){ curl wttr.in/Moon; }
 cmdfu(){ curl "https://www.commandlinefu.com/commands/matching/$@/$(echo -n $@ | openssl base64)/plaintext" --silent | bat -l bash; }
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
-export HOMEBREW_GITHUB_API_TOKEN=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
+export HOMEBREW_GITHUB_API_TOKEN=`cat .homebrewapi`
 export HOMEBREW_NO_INSTALL_CLEANUP=FALSE
 export PATH="/Users/danliu/.local/bin:$PATH"
 export PATH="/Users/danliu/bin:$PATH"
