@@ -5,9 +5,20 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-#autoload -U compinit && compinit
-
 source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# autoload -U compinit && compinit
+
+SAVEHIST=10000
+HISTSIZE=10000
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
 
 autoload -U colors && colors
 export CLICOLOR=1
@@ -16,17 +27,29 @@ export PS1="%B%F{blue}%n%b%f@%F{green}%m %F{yellow}%2~ %f% "
 alias ls='exa -a --color=always --group-directories-first'
 alias ll='exa -alh'
 alias tree='exa --tree -a'
+alias h='history'
+alias v='nvim'
+alias brewup='brew update; brew upgrade; brew cleanup -s; brew doctor'
+alias ..='cd ..'
 
+alias as='as -arch arm64'
+alias ld='ld -lSystem -syslibroot `xcrun -sdk macosx --show-sdk-path` -arch arm64'
+
+export ZSH="$HOME/.zsh"
+
+# autosuggestions
+source "$ZSH/zsh-autosuggestions/zsh-autosuggestions.zsh"
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#999999"
+
+# syntax highlighting
+source "$ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# vim mode
+set -o vi
 
 setopt pushd_ignore_dups
 setopt autopushd
 
-SAVEHIST=10000
-HISTSIZE=10000
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-
-alias ..='cd ..'
 function ...()
 {
   if [ $# -eq 1 ]; then
@@ -37,14 +60,7 @@ function ...()
     done
   fi
 }
-alias h='history'
-alias v='nvim'
-alias brewup='brew update; brew upgrade; brew cleanup -s; brew doctor'
 
-alias as='as -arch arm64'
-alias ld='ld -lSystem -syslibroot `xcrun -sdk macosx --show-sdk-path` -arch arm64'
-
-set -o vi
 
 function d()
 {
@@ -83,6 +99,7 @@ function ghlatest() {
     gh release download $(gh release list -R $1/$2 | head -1 | awk -F'\t' '{print $3}') -R $1/$2
 }
 
+# handle dotfiles using bare git repo
 function dots () {
   git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" "$@"
 }
@@ -99,17 +116,14 @@ fi
 export MC="$HOME/Library/Application Support/minecraft/"
 export WORK="$HOME/Desktop/work/"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 weather(){ curl wttr.in/newyork; }
 moon(){ curl wttr.in/Moon; }
 cmdfu(){ curl "https://www.commandlinefu.com/commands/matching/$@/$(echo -n $@ | openssl base64)/plaintext" --silent | bat -l bash; }
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
-export HOMEBREW_GITHUB_API_TOKEN=`cat .homebrewapi`
+export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrewapi`
 export HOMEBREW_NO_INSTALL_CLEANUP=FALSE
 export PATH="/Users/danliu/.local/bin:$PATH"
 export PATH="/Users/danliu/bin:$PATH"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
