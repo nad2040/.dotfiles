@@ -158,7 +158,7 @@ _comp_options=("${(@)_comp_options:#NO_ignoreclosebraces}")
 
 setopt notify
 
-alias dots='/usr/bin/git --git-dir=/home/nad/.dotfiles/ --work-tree=/home/nad'
+alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
