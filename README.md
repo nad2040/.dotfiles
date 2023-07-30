@@ -12,5 +12,4 @@ dots remote add origin git@github.com:nad2040/.dotfiles.git
 dots branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
 dots fetch --all
 dots switch -f asahi
-dots branch -d master
 ```
