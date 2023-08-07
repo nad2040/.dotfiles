@@ -127,8 +127,6 @@ export HOMEBREW_NO_INSTALL_CLEANUP=FALSE
 export PATH="/Users/danliu/.local/bin:$PATH"
 export PATH="/Users/danliu/bin:$PATH"
 
-conda init "$(basename "${SHELL}")"
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
