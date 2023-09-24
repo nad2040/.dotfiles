@@ -8,7 +8,7 @@ fi
 # few terminal keybinds
 bindkey -v
 
-export LIBGL_ALWAYS_SOFTWARE=1
+# export LIBGL_ALWAYS_SOFTWARE=1
 typeset -A key
 
 key[Home]=${terminfo[khome]}
@@ -42,7 +42,7 @@ if [[ -n ${terminfo[smkx]} ]] && [[ -n ${terminfo[rmkx]} ]]; then
         echoti rmkx
     }
     zle -N zle-line-init
-    zle -N zle-line-finish  
+    zle -N zle-line-finish
 fi
 
 zle -N fake-enter; bindkey "^X^H" fake-enter
@@ -54,6 +54,7 @@ colors
 # aliases
 alias ls="ls -a --color=auto"
 alias v="nvim"
+alias icat="kitty +kitten icat"
 alias rh='fc -R'
 
 autoload run-help
