@@ -24,9 +24,9 @@ autoload -U colors && colors
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 export PS1="%B%F{blue}%n%b%f@%F{green}%m %F{yellow}%2~ %f% "
-alias ls='exa -a --color=always --group-directories-first'
-alias ll='exa -alh'
-alias tree='exa --tree -a'
+alias ls='eza -a --color=always --group-directories-first'
+alias ll='eza -alh'
+alias tree='eza --tree -a'
 alias h='history'
 alias v='nvim'
 alias brewup='brew update; brew upgrade; brew cleanup -s; brew doctor'
