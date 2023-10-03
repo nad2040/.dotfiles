@@ -1,0 +1,10 @@
+alias ls='eza -a --color=always --group-directories-first'
+alias ll='eza -alh'
+alias tree='eza --tree -a'
+alias h='history'
+alias v='nvim'
+alias brewup='brew update; brew upgrade; brew cleanup -s; brew doctor'
+alias ..='cd ..'
+
+alias as='as -arch arm64'
+alias ld='ld -lSystem -syslibroot `xcrun -sdk macosx --show-sdk-path` -arch arm64'
