@@ -10,6 +10,9 @@ source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+antidote load ${ZDOTDIR:-$HOME/.zsh}/.zsh_plugins.txt
+
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -37,11 +40,7 @@ source "$ZSH/alias.zsh"
 source "$ZSH/function.zsh"
 
 # autosuggestions
-source "$ZSH/zsh-autosuggestions/zsh-autosuggestions.zsh"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#999999"
-
-# syntax highlighting
-source "$ZSH/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # Handle Mac platforms
 CPU=$(uname -p)

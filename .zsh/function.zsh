@@ -49,7 +49,7 @@ function ghlatest() {
 
 # handle dotfiles using bare git repo
 function dots () {
-  git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" "$@"
+  git --git-dir="$HOME/.dotfiles/.git" --work-tree="$HOME/.dotfiles" "$@"
 }
 
 weather(){ curl "wttr.in/newyork"; }
