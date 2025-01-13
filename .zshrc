@@ -8,7 +8,7 @@ fi
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
 
-source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
+source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -57,14 +57,16 @@ fi
 export MC="$HOME/Library/Application Support/minecraft/"
 export WORK="$HOME/Desktop/work/"
 export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrewapi`
-export HOMEBREW_NO_INSTALL_CLEANUP=FALSE
+export HOMEBREW_NO_INSTALL_CLEANUP=
 
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
-export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+# export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="/Users/danliu/.local/bin:$PATH"
 export PATH="/Users/danliu/bin:$PATH"
 # export PATH="/opt/homebrew/anaconda3/bin:$PATH"  # commented out by conda initialize
+
+export MANPATH="/usr/local/share/man:$MANPATH"
 
 # pnpm
 export PNPM_HOME="/Users/danliu/Library/pnpm"
