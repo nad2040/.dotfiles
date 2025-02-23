@@ -25,6 +25,7 @@ set -o vi
 autoload -U compinit && compinit
 autoload -U colors && colors
 
+setopt nonomatch
 setopt pushd_ignore_dups
 setopt autopushd
 
@@ -61,37 +62,12 @@ export HOMEBREW_NO_INSTALL_CLEANUP=
 
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
-# export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="/Users/danliu/.local/bin:$PATH"
 export PATH="/Users/danliu/bin:$PATH"
-# export PATH="/opt/homebrew/anaconda3/bin:$PATH"  # commented out by conda initialize
 
 export MANPATH="/usr/local/share/man:$MANPATH"
-
-# pnpm
-export PNPM_HOME="/Users/danliu/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
 
 eval "$(zoxide init zsh --cmd cd)"
 
 # opam configuration
 [[ ! -r /Users/danliu/.opam/opam-init/init.zsh ]] || source /Users/danliu/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
