@@ -1,17 +1,5 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
-
-source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
 antidote load ${ZDOTDIR:-$HOME/.zsh}/.zsh_plugins.txt
@@ -21,6 +9,7 @@ antidote load ${ZDOTDIR:-$HOME/.zsh}/.zsh_plugins.txt
 
 # vim mode
 set -o vi
+bindkey -v
 
 autoload -U compinit && compinit
 autoload -U colors && colors
@@ -57,7 +46,7 @@ fi
 
 export MC="$HOME/Library/Application Support/minecraft/"
 export WORK="$HOME/Desktop/work/"
-export HOMEBREW_GITHUB_API_TOKEN=`cat ~/.homebrewapi`
+export HOMEBREW_GITHUB_API_TOKEN=$(cat ~/.homebrewapi)
 export HOMEBREW_NO_INSTALL_CLEANUP=
 
 export PATH="/usr/local/sbin:$PATH"
@@ -71,3 +60,28 @@ eval "$(zoxide init zsh --cmd cd)"
 
 # opam configuration
 [[ ! -r /Users/danliu/.opam/opam-init/init.zsh ]] || source /Users/danliu/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+# # >>> conda initialize >>>
+# # !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/opt/homebrew/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/opt/homebrew/anaconda3/etc/profile.d/conda.sh" ]; then
+#         . "/opt/homebrew/anaconda3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/opt/homebrew/anaconda3/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# # <<< conda initialize <<<
+
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+
+eval "$(direnv hook zsh)"
+# source $(brew --prefix autoenv)/activate.sh
+# AUTOENV_ENABLE_LEAVE="yes"
+
+source <(kubectl completion zsh)
+
+eval "$(starship init zsh)"
