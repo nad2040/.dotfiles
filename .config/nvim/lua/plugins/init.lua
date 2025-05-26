@@ -5,5 +5,4 @@ return {
     --     'eandrju/cellular-automaton.nvim',
     --     keys = { { '<leader>mr', '<CMD>CellularAutomaton make_it_rain<CR>' } },
     -- },
-    'mfussenegger/nvim-jdtls',
 }

@@ -1,73 +1,26 @@
 return {
+    -- CMP
     {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v4.x',
-        lazy = true,
-        config = false,
-    },
-    {
-        'williamboman/mason.nvim',
-        lazy = false,
-        config = true,
-    },
-    -- Autocompletion
-    {
-        'hrsh7th/nvim-cmp',
-        event = 'InsertEnter',
-        dependencies = {
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-path' },
-            { 'hrsh7th/cmp-cmdline' },
-            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
-            { 'saadparwaiz1/cmp_luasnip' },
-            { 'hrsh7th/cmp-nvim-lua' },
-            { 'L3MON4D3/LuaSnip' },
-            { 'rafamadriz/friendly-snippets' },
+        'saghen/blink.cmp',
+        dependencies = { 'rafamadriz/friendly-snippets' },
+        -- version = '1.*',
+        build = 'cargo build --release',
+        opts = {
+            keymap = { preset = 'default' },
+            appearance = {
+                -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+                -- Adjusts spacing to ensure icons are aligned
+                nerd_font_variant = 'mono'
+            },
+            completion = { documentation = { auto_show = true } },
+            -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+            -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+            -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+            --
+            -- See the fuzzy documentation for more information
+            fuzzy = { implementation = "prefer_rust_with_warning" }
         },
-        config = function()
-            -- Here is where you configure the autocompletion settings.
-            local lsp_zero = require('lsp-zero')
-            lsp_zero.extend_cmp()
-
-            -- And you can configure cmp even more, if you want to.
-            local cmp = require('cmp')
-            local cmp_action = lsp_zero.cmp_action()
-            local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
-            cmp.setup({
-                sources = {
-                    -- Copilot Source
-                    { name = "copilot",                 group_index = 2 },
-                    -- Other Sources
-                    { name = 'nvim_lsp_signature_help', group_index = 2 },
-                    { name = "nvim_lsp",                group_index = 2 },
-                    { name = "path",                    group_index = 2 },
-                    { name = "luasnip",                 group_index = 2 },
-                    { name = "emmet_ls",                group_index = 2 },
-                },
-                formatting = lsp_zero.cmp_format({ details = true }),
-                mapping = cmp.mapping.preset.insert({
-                    ['<C-Space>'] = cmp.mapping.complete(),
-                    ['<C-f>'] = cmp_action.luasnip_jump_forward(),
-                    ['<C-b>'] = cmp_action.luasnip_jump_backward(),
-                    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-                    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-                    ['<CR>'] = cmp.mapping.confirm({
-                        -- documentation says this is important.
-                        -- I don't know why.
-                        behavior = cmp.ConfirmBehavior.Replace,
-                        select = false,
-                    }),
-                    ['<Tab>'] = nil, --[[ cmp_action.luasnip_supertab(), ]]
-                    ['<S-Tab>'] = nil, --[[ cmp_action.luasnip_shift_supertab(), ]]
-                }),
-                snippet = {
-                    expand = function(args)
-                        require('luasnip').lsp_expand(args.body)
-                    end,
-                },
-            })
-        end
+        opts_extend = { "sources.default", "cmdline", "omni" }
     },
     -- LSP
     {
@@ -75,151 +28,106 @@ return {
         cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
         event = { 'BufReadPre', 'BufNewFile' },
         dependencies = {
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'williamboman/mason.nvim' },
-            { 'williamboman/mason-lspconfig.nvim' },
+            { 'saghen/blink.cmp' },
+            { 'mason-org/mason.nvim' },
+            { 'mason-org/mason-lspconfig.nvim' },
+            { 'mfussenegger/nvim-jdtls' },
         },
         config = function()
-            local lsp_zero = require('lsp-zero')
+            local autoformat = true
 
-            local lsp_attach = function(client, bufnr)
-                local opts = { buffer = bufnr, remap = false }
-
-                -- lsp_zero.default_keymaps({ buffer = bufnr })
-                local wk = require('which-key')
-                wk.add({
-                    -- LSP actions
-                    { "K",           function() vim.lsp.buf.hover() end,                  desc = "Hover" },
-                    { "gd",          function() vim.lsp.buf.definition() end,             desc = "Go to Definition" },
-                    { "gD",          function() vim.lsp.buf.declaration() end,            desc = "Go to Declaration" },
-                    { "gi",          function() vim.lsp.buf.implementation() end,         desc = "Go to Implementation" },
-                    { "go",          function() vim.lsp.buf.type_definition() end,        desc = "Go to Type Definition" },
-                    { "gr",          function() vim.lsp.buf.references() end,             desc = "Go to References" },
-                    { "gs",          function() vim.lsp.buf.signature_help() end,         desc = "Signature help" },
-                    { "<leader>vws", function() vim.lsp.buf.workspace_symbol() end,       desc = "Workspace symbol" },
-                    { "<leader>vca", function() vim.lsp.buf.code_action() end,            desc = "View code actions" },
-                    { "<leader>vrn", function() vim.lsp.buf.rename() end,                 desc = "Rename" },
-                    { "<leader>H",   function() vim.lsp.inlay_hint(bufnr, nil) end,       desc = "Toggle Inlay Hints" },
-                    { "<leader>f",   function() vim.lsp.buf.format({ async = true }) end, desc = "Format" },
-                    -- Diagnostics
-                    { "<leader>vd",  function() vim.diagnostic.open_float() end,          desc = "Open diagnostic" },
-                    { "[d",          function() vim.diagnostic.goto_prev() end,           desc = "Previous diagnostic" },
-                    { "]d",          function() vim.diagnostic.goto_next() end,           desc = "Next diagnostic" },
-
-                })
-
-                -- vim.api.nvim_create_augroup("lsp_augroup", { clear = true })
-                -- vim.api.nvim_create_autocmd("InsertEnter", {
-                --     buffer = bufnr,
-                --     callback = function() vim.lsp.inlay_hint(bufnr, true) end,
-                --     group = "lsp_augroup",
-                -- })
-                -- vim.api.nvim_create_autocmd("InsertLeave", {
-                --     buffer = bufnr,
-                --     callback = function() vim.lsp.inlay_hint(bufnr, false) end,
-                --     group = "lsp_augroup",
-                -- })
-            end
-
-            lsp_zero.extend_lspconfig({
-                suggest_lsp_servers = false,
-                sign_icons = {
-                    error = 'E',
-                    warn = 'W',
-                    hint = 'H',
-                    info = 'I'
-                },
-                sign_text = true,
-                lsp_attach = lsp_attach,
-                capabilities = require('cmp_nvim_lsp').default_capabilities()
+            local capabilities = require('blink.cmp').get_lsp_capabilities()
+            vim.lsp.config('*', {
+                capabilities = capabilities,
+                root_markers = { '.git' },
             })
 
-            -- Fix Undefined global 'vim'
-            lsp_zero.configure('lua_ls', {
-                settings = {
-                    Lua = {
-                        diagnostics = {
-                            globals = { 'vim' }
-                        },
-                        hint = {
-                            enable = true,
-                        },
-                    }
-                }
+            vim.api.nvim_create_augroup("lsp_augroup", { clear = true })
+
+            vim.api.nvim_create_autocmd('LspAttach', {
+                callback = function(args)
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    -- if client and client:supports_method('textDocument/completion') then
+                    --     vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = false })
+                    -- end
+
+                    if autoformat and client and client:supports_method('textDocument/formatting') then
+                        vim.api.nvim_create_autocmd('BufWritePre', {
+                            buffer = args.buf,
+                            callback = function()
+                                vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
+                            end,
+                        })
+                    end
+
+                    if client and client:supports_method('textDocument/inlayHint') then
+                        vim.api.nvim_create_autocmd("InsertEnter", {
+                            buffer = args.buf,
+                            callback = function() vim.lsp.inlay_hint.enable(true) end,
+                            group = "lsp_augroup",
+                        })
+                        vim.api.nvim_create_autocmd("InsertLeave", {
+                            buffer = args.buf,
+                            callback = function() vim.lsp.inlay_hint.enable(false) end,
+                            group = "lsp_augroup",
+                        })
+                    end
+
+                    local wk = require('which-key')
+                    wk.add({
+                        -- LSP actions
+                        { "K",           function() vim.lsp.buf.hover() end,                                            desc = "Hover" },
+                        { "gd",          function() vim.lsp.buf.definition() end,                                       desc = "Go to Definition" },
+                        { "gD",          function() vim.lsp.buf.declaration() end,                                      desc = "Go to Declaration" },
+                        { "gi",          function() vim.lsp.buf.implementation() end,                                   desc = "Go to Implementation" },
+                        { "go",          function() vim.lsp.buf.type_definition() end,                                  desc = "Go to Type Definition" },
+                        { "gr",          function() vim.lsp.buf.references() end,                                       desc = "Go to References" },
+                        { "gs",          function() vim.lsp.buf.signature_help() end,                                   desc = "Signature help" },
+                        { "<leader>vws", function() vim.lsp.buf.workspace_symbol() end,                                 desc = "Workspace symbol" },
+                        { "<leader>vca", function() vim.lsp.buf.code_action() end,                                      desc = "View code actions" },
+                        { "<leader>vrn", function() vim.lsp.buf.rename() end,                                           desc = "Rename" },
+                        { "<leader>H",   function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end, desc = "Toggle Inlay Hints" },
+                        { "<leader>f",   function() vim.lsp.buf.format({ async = true }) end,                           desc = "Format" },
+                        -- Diagnostics
+                        { "<leader>vd",  function() vim.diagnostic.open_float() end,                                    desc = "Open diagnostic" },
+                        -- { "[d",          function() vim.diagnostic.goto_prev() end,           desc = "Previous diagnostic" },
+                        -- { "]d",          function() vim.diagnostic.goto_next() end,           desc = "Next diagnostic" },
+
+                    })
+                end,
+                group = "lsp_augroup"
+            })
+
+            vim.api.nvim_create_autocmd('LspDetach', {
+                callback = function(args)
+                    -- Get the detaching client
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    -- Remove the autocommand to format the buffer on save, if it exists
+                    vim.api.nvim_clear_autocmds({ group = "lsp_augroup", buffer = args.buf })
+                end,
+                group = "lsp_augroup"
             })
 
             require('mason').setup({})
             require('mason-lspconfig').setup({
+                automatic_enable = {
+                    "lua_ls",
+                    "vimls",
+                    -- "ocamllsp"
+                },
                 ensure_installed = {
                     'clangd',
                     'jdtls',
                     'lua_ls',
-                    -- 'gleam',
                     'rust_analyzer',
-                    'ocamllsp',
-                    'pest_ls',
                 },
-                handlers = {
-                    -- this first function is the "default handler"
-                    -- it applies to every language server without a "custom handler"
-                    function(server_name)
-                        require('lspconfig')[server_name].setup({})
-                    end,
-                    pest_ls = function()
-                        require('lspconfig').pest_ls.setup({
-                            filetypes = { "pest" }
-                        })
-                    end,
-                    lua_ls = function()
-                        require('lspconfig').lua_ls.setup({
-                            on_init = function(client)
-                                lsp_zero.nvim_lua_settings(client, {})
-                            end,
-                        })
-                    end,
-                    emmet_ls = function()
-                        require('lspconfig').emmet_ls.setup({
-                            -- on_attach = on_attach,
-                            filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass",
-                                "scss", "svelte", "pug", "typescriptreact", "vue" },
-                            init_options = {
-                                html = {
-                                    options = {
-                                        -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-                                        ["bem.enabled"] = true,
-                                    },
-                                },
-                            }
-                        })
-                    end,
-                    groovyls = function()
-                        require('lspconfig').groovyls.setup({
-                            cmd = { "groovy-language-server" },
-                        })
-                    end,
-                    jdtls = lsp_zero.noop,
-                }
             })
 
-            require("lspconfig").gleam.setup({})
-
-            lsp_zero.format_on_save({
-                format_opts = {
-                    async = false,
-                    timeout_ms = 10000,
-                },
-                servers = {
-                    ['lua_ls'] = { 'lua' },
-                    ['rust_analyzer'] = { 'rust' },
-                    ['ocamllsp'] = { 'ocaml' },
-                    -- if you have a working setup with null-ls
-                    -- you can specify filetypes it can format.
-                    -- ['null-ls'] = { "ocaml" },
-                }
-            })
+            vim.lsp.enable("ocamllsp")
+            vim.lsp.enable("jdtls")
 
             vim.diagnostic.config({
-                virtual_text = true
+                virtual_lines = true
             })
         end
     }
