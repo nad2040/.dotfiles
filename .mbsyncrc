@@ -1,0 +1,26 @@
+IMAPAccount stevens
+Host 127.0.0.1
+Port 1143
+User dliu4@stevens.edu
+Pass ""
+AuthMechs LOGIN
+TLSType None
+
+IMAPStore stevens-remote
+Account stevens
+
+MaildirStore stevens-local
+Subfolders Verbatim
+Path ~/Mail/stevens/
+Inbox ~/Mail/stevens/INBOX/
+
+Channel stevens
+Far :stevens-remote:
+Near :stevens-local:
+Patterns * # stevens/INBOX stevens/Archive stevens/Sent stevens/Junk
+Create Both
+Expunge Both
+SyncState *
+
+# Group o365-davmail
+# Channel stevens-default
