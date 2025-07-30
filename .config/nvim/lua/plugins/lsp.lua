@@ -110,16 +110,14 @@ return {
 
             require('mason').setup({})
             require('mason-lspconfig').setup({
-                automatic_enable = {
-                    "lua_ls",
-                    "vimls",
-                    -- "ocamllsp"
-                },
                 ensure_installed = {
+                    'lua_ls',
+                    "vimls",
                     'clangd',
                     'jdtls',
-                    'lua_ls',
                     'rust_analyzer',
+                    'pyright',
+                    'tinymist',
                 },
             })
 

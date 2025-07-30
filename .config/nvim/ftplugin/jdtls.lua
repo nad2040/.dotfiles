@@ -3,9 +3,9 @@ local cache_vars = {}
 
 local root_markers = {
     '.git',
-    -- 'mvnw',
-    -- 'gradlew',
-    -- 'pom.xml',
+    'mvnw',
+    'gradlew',
+    'pom.xml',
     'build.gradle',
 }
 
@@ -166,7 +166,7 @@ local function jdtls_setup(event)
         -- The command that starts the language server
         -- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line
         -- 💀
-        '/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/bin/java', -- or '/path/to/java17_or_newer/bin/java'
+        'java', -- or '/path/to/java17_or_newer/bin/java'
         -- depends on if `java` is in your $PATH env variable and if it points to the right version.
 
         '-Declipse.application=org.eclipse.jdt.ls.core.id1',

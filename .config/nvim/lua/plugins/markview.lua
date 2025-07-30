@@ -3,12 +3,13 @@ return {
     lazy = false, -- Recommended
     -- ft = "markdown" -- If you decide to lazy-load anyway
 
-    dependencies = {
-        -- You will not need this if you installed the
-        -- parsers manually
-        -- Or if the parsers are in your $RUNTIMEPATH
-        "nvim-treesitter/nvim-treesitter",
+    -- For `nvim-treesitter` users.
+    priority = 49,
 
+    dependencies = {
+        -- For blink.cmp's completion
+        -- source
+        "saghen/blink.cmp",
         "nvim-tree/nvim-web-devicons"
     }
 }
