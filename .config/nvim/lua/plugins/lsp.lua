@@ -108,6 +108,8 @@ return {
                 group = "lsp_augroup"
             })
 
+            vim.lsp.set_log_level("WARN")
+
             require('mason').setup({})
             require('mason-lspconfig').setup({
                 ensure_installed = {
@@ -116,13 +118,14 @@ return {
                     'clangd',
                     'jdtls',
                     'rust_analyzer',
-                    'pyright',
                     'tinymist',
                 },
             })
 
             vim.lsp.enable("ocamllsp")
             vim.lsp.enable("jdtls")
+            vim.lsp.config("mojo-lsp-server", { cmd = { "mojo-lsp-server" }, filetypes = { "mojo" } })
+            vim.lsp.enable("mojo-lsp-server")
 
             vim.diagnostic.config({
                 virtual_lines = true

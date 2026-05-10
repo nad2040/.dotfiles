@@ -4,8 +4,7 @@ export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
 source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
 antidote load ${ZDOTDIR:-$HOME/.zsh}/.zsh_plugins.txt
 
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source <(fzf --zsh)
 
 # vim mode
 set -o vi
@@ -35,24 +34,15 @@ source "$ZSH/function.zsh"
 # autosuggestions
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#999999"
 
-# Handle Mac platforms
-CPU=$(uname -p)
-if [[ "$CPU" == "arm" ]]; then
-    export PATH="/opt/homebrew/bin:$PATH"
-    alias oldbrew=/usr/local/bin/brew
-else
-    export PATH="/usr/local/bin:$PATH"
-fi
-
 export MC="$HOME/Library/Application Support/minecraft/"
 export WORK="$HOME/Desktop/work/"
 export HOMEBREW_GITHUB_API_TOKEN=$(cat ~/.homebrewapi)
 export HOMEBREW_NO_INSTALL_CLEANUP=
 
 export PATH="/usr/local/sbin:$PATH"
-export PATH="/opt/homebrew/sbin:$PATH"
 export PATH="/Users/danliu/.local/bin:$PATH"
 export PATH="/Users/danliu/bin:$PATH"
+export PATH="/Library/TeX/texbin:$PATH"
 
 export MANPATH="/usr/local/share/man:$MANPATH"
 
@@ -76,12 +66,17 @@ eval "$(zoxide init zsh --cmd cd)"
 # unset __conda_setup
 # # <<< conda initialize <<<
 
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-
-eval "$(direnv hook zsh)"
 # source $(brew --prefix autoenv)/activate.sh
 # AUTOENV_ENABLE_LEAVE="yes"
 
 source <(kubectl completion zsh)
 
 eval "$(starship init zsh)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/danliu/.lmstudio/bin"
+# End of LM Studio CLI section
+
+eval "$(direnv hook zsh)"
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1

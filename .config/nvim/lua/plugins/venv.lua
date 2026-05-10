@@ -2,21 +2,18 @@ return {
     "linux-cultist/venv-selector.nvim",
     dependencies = {
         "neovim/nvim-lspconfig",
-        "mfussenegger/nvim-dap", "mfussenegger/nvim-dap-python", --optional
-        { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
+        { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } }, -- optional: you can also use fzf-lua, snacks, mini-pick instead.
     },
-    lazy = false,
-    branch = 'regexp',
-    opts = {
-        -- Your options go here
-        -- name = "venv",
-        -- auto_refresh = false
-    },
-    event = 'VeryLazy', -- Optional: needed only if you want to type `:VenvSelect` without a keymapping
+    ft = "python",                                                                                         -- Load when opening Python files
     keys = {
-        -- Keymap to open VenvSelector to pick a venv.
-        { '<leader>venvs', '<cmd>VenvSelect<cr>' },
-        -- Keymap to retrieve the venv from a cache (the one previously used for the same project directory).
-        { '<leader>venvc', '<cmd>VenvSelectCached<cr>' },
+        { "<leader>venvs", "<cmd>VenvSelect<cr>" },                                                        -- Open picker on keymap
+    },
+    opts = {                                                                                               -- this can be an empty lua table - just showing below for clarity.
+        search = {
+            my_venvs = {
+                command = "fd -HI /bin/python$ ~ --full-path",
+            },
+        }, -- if you add your own searches, they go here.
+        -- options = {}                                                                                       -- if you add plugin options, they go here.
     },
 }
